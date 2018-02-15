@@ -1,6 +1,5 @@
 package nick.spacexlaunches
 
-import android.util.Log
 import data.Flight
 
 val TAG = "daywint"
@@ -29,6 +28,6 @@ class MainPresenter : MainPresenterMvp {
 
     override fun receiveSpacexFlights(flighs: List<Flight>) {
         view?.hideLoadingIndicator()
-        Log.d(TAG, flighs.toString())
+        flighs.forEach({ x -> view?.addFlight(x) })
     }
 }
