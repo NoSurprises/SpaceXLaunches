@@ -43,6 +43,6 @@ class MainPresenter : MainPresenterMvp {
     }
 
     override fun flightClicked(flight: Flight) {
-        view?.showToast(flight.article)
+        view?.openBrowserFor(flight.article)
     }
 }

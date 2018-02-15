@@ -10,4 +10,5 @@ interface MainViewMvp {
     fun setChildImage(i: Int, image: Bitmap)
     fun removeFlights()
     fun showToast(msg: String)
+    fun openBrowserFor(link: String)
 }
