@@ -45,4 +45,12 @@ class MainPresenter : MainPresenterMvp {
     override fun flightClicked(flight: Flight) {
         view?.openBrowserFor(flight.article)
     }
+
+    override fun clickedChangeYear() {
+        view?.showYearSelectionDialog()
+    }
+
+    override fun changeYear(year: Int) {
+        view?.showToast("new year is $year")
+    }
 }

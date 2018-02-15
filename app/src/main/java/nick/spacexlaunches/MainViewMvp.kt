@@ -11,4 +11,5 @@ interface MainViewMvp {
     fun removeFlights()
     fun showToast(msg: String)
     fun openBrowserFor(link: String)
+    fun showYearSelectionDialog()
 }

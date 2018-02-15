@@ -1,5 +1,7 @@
 package nick.spacexlaunches
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -7,11 +9,10 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import data.Flight
 
 
@@ -28,6 +29,21 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
         presenter.attachView(this)
         swipeRefresh.setOnRefreshListener { presenter.onRefresh() }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.change_year -> {
+                presenter.clickedChangeYear()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -79,5 +95,25 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(link)
         startActivity(i)
+    }
+
+    override fun showYearSelectionDialog() {
+        val picker = AlertDialog.Builder(this)
+        picker.setTitle("Change year")
+        val yearSelection = layoutInflater.inflate(R.layout.year_selection, null)
+        val years = yearSelection.findViewById<NumberPicker>(R.id.year_selector)
+        years.minValue = 2000
+        years.maxValue = 2018
+
+        picker.setView(yearSelection)
+        picker.setPositiveButton(
+                "OK",
+                DialogInterface.OnClickListener { dialog, which -> presenter.changeYear(years.value) }
+        ).setNegativeButton(
+                "CANCEL",
+                DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() }
+        )
+        picker.create()
+        picker.show()
     }
 }

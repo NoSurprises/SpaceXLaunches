@@ -10,4 +10,6 @@ interface MainPresenterMvp {
     fun receiveSpacexFlights(flighs: List<Flight>)
     fun imageLoaded(i: Int)
     fun flightClicked(flight: Flight)
+    fun clickedChangeYear()
+    fun changeYear(year: Int)
 }
