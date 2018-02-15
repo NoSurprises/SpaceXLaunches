@@ -23,6 +23,7 @@ class MainPresenter : MainPresenterMvp {
     }
 
     override fun onRefresh() {
+        view?.hideEmptyMessage()
         view?.removeFlights()
         view?.showLoadingIndicator()
         model.fetchSpaceXFlights()
@@ -35,6 +36,10 @@ class MainPresenter : MainPresenterMvp {
             view?.addFlight(x)
             Log.v(TAG, "flight: $x")
         })
+
+        if (flighs.size == 0) {
+            view?.showEmptyMessage()
+        }
     }
 
     override fun imageLoaded(i: Int) {
@@ -51,6 +56,11 @@ class MainPresenter : MainPresenterMvp {
     }
 
     override fun changeYear(year: Int) {
-        view?.showToast("new year is $year")
+        model.changeYear(year)
+        onRefresh()
+    }
+
+    override fun getYear(): Int {
+        return model.getYear()
     }
 }

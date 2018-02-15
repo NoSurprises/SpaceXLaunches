@@ -12,4 +12,6 @@ interface MainViewMvp {
     fun showToast(msg: String)
     fun openBrowserFor(link: String)
     fun showYearSelectionDialog()
+    fun showEmptyMessage()
+    fun hideEmptyMessage()
 }

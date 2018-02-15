@@ -33,4 +33,16 @@
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_width="222dp"
+        android:layout_height="wrap_content"
+        android:text="No flights this year :("
+        android:textColor="@color/black54"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

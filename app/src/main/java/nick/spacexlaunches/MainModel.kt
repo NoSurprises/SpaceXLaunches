@@ -17,12 +17,23 @@ class MainModel(private val presenter: MainPresenterMvp) : MainModelMvp, FetchNe
     private var flights = ArrayList<Flight>()
     private var imagesAsync: LoadImage? = null
     private var apiAsync: FetchNetwork? = null
-    private val dateFormat = SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US)
+    private val dateFormat = SimpleDateFormat("EEE, d MMM yyyy", Locale.US)
+    private var year = 2017
+    private val url = "https://api.spacexdata.com/v2/launches?launch_year="
+
     override fun fetchSpaceXFlights() {
         cancelAsyncTasks()
-        val url = URL("https://api.spacexdata.com/v2/launches?launch_year=2017")
+
         apiAsync = FetchNetwork()
-        apiAsync?.setFetchNetworkListener(this)?.execute(url)
+        apiAsync?.setFetchNetworkListener(this)?.execute(URL(url + year.toString()))
+    }
+
+    override fun changeYear(year: Int) {
+        this.year = year
+    }
+
+    override fun getYear(): Int {
+        return year
     }
 
     override fun onFinishResponseFromApi(result: String) {

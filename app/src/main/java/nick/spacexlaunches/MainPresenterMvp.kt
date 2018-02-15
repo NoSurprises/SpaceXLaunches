@@ -12,4 +12,5 @@ interface MainPresenterMvp {
     fun flightClicked(flight: Flight)
     fun clickedChangeYear()
     fun changeYear(year: Int)
+    fun getYear(): Int
 }

@@ -1,7 +1,6 @@
 package nick.spacexlaunches
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -20,6 +19,7 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
 
     private val swipeRefresh: SwipeRefreshLayout by lazy { findViewById<SwipeRefreshLayout>(R.id.swipe_refresh) }
     private val flights: LinearLayout by lazy { findViewById<LinearLayout>(R.id.flights) }
+    private val emptyMessage: TextView by lazy { findViewById<TextView>(R.id.empty_message) }
     private val presenter = MainPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
 
     private fun bindFlightDataToView(flight: Flight, flightView: View) {
         flightView.findViewById<TextView>(R.id.rocket_name).text = flight.rocketName
-        flightView.findViewById<TextView>(R.id.details).text = flight.details
+        flightView.findViewById<TextView>(R.id.details).text = if (flight.details == "null") "" else flight.details
         flightView.findViewById<TextView>(R.id.launch).text = flight.launch
     }
 
@@ -102,18 +102,27 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
         picker.setTitle("Change year")
         val yearSelection = layoutInflater.inflate(R.layout.year_selection, null)
         val years = yearSelection.findViewById<NumberPicker>(R.id.year_selector)
-        years.minValue = 2000
+        years.minValue = 2006
         years.maxValue = 2018
+        years.value = presenter.getYear()
 
         picker.setView(yearSelection)
         picker.setPositiveButton(
                 "OK",
-                DialogInterface.OnClickListener { dialog, which -> presenter.changeYear(years.value) }
+                { dialog, which -> presenter.changeYear(years.value) }
         ).setNegativeButton(
                 "CANCEL",
-                DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() }
+                { dialog, which -> dialog.dismiss() }
         )
         picker.create()
         picker.show()
+    }
+
+    override fun showEmptyMessage() {
+        emptyMessage.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyMessage() {
+        emptyMessage.visibility = View.GONE
     }
 }
