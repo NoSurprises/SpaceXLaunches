@@ -1,6 +1,7 @@
 package nick.spacexlaunches
 
 import data.Flight
+import org.json.JSONArray
 import utils.FetchNetwork
 import utils.FetchNetworkListener
 import java.net.URL
@@ -13,8 +14,19 @@ class MainModel(val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkLis
     }
 
     override fun onFinish(result: String) {
+        val jsonData = JSONArray(result)
         val flights = ArrayList<Flight>()
-        flights.add(Flight(result))
+
+        for (i in 0 until jsonData.length()) {
+            val flightRaw = jsonData.getJSONObject(i)
+
+            val rocketName = flightRaw.getJSONObject("rocket").getString("rocket_name")
+            val launch = flightRaw.getLong("launch_date_unix")
+            val icon = flightRaw.getJSONObject("links").getString("mission_patch")
+            val details = flightRaw.getString("details")
+
+            flights.add(Flight(rocketName, launch.toString(), icon, details))
+        }
 
         presenter.receiveSpacexFlights(flights)
     }
