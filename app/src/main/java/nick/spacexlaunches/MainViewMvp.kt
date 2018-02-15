@@ -9,4 +9,5 @@ interface MainViewMvp {
     fun addFlight(flight: Flight)
     fun setChildImage(i: Int, image: Bitmap)
     fun removeFlights()
+    fun showToast(msg: String)
 }

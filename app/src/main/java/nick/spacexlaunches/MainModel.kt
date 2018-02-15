@@ -8,14 +8,14 @@ import utils.FetchNetworkListener
 import utils.LoadImage
 import java.net.URL
 
-class MainModel(val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkListener {
+class MainModel(private val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkListener {
 
     private var flights = ArrayList<Flight>()
     private var imagesAsync: LoadImage? = null
     private var apiAsync: FetchNetwork? = null
 
     override fun fetchSpaceXFlights() {
-        cancellAsyncTasks()
+        cancelAsyncTasks()
         val url = URL("https://api.spacexdata.com/v2/launches?launch_year=2017")
         apiAsync = FetchNetwork()
         apiAsync?.setFetchNetworkListener(this)?.execute(url)
@@ -32,9 +32,11 @@ class MainModel(val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkLis
             val launch = flightRaw.getLong("launch_date_unix")
             val iconUrl = flightRaw.getJSONObject("links").getString("mission_patch")
             val details = flightRaw.getString("details")
+            val article = flightRaw.getJSONObject("links").getString("article_link")
 
-            flights.add(Flight(rocketName, launch.toString(), iconUrl = URL(iconUrl), details = details))
+            flights.add(Flight(rocketName, launch.toString(), iconUrl = URL(iconUrl), details = details, article = article))
         }
+
         imagesAsync = LoadImage()
         imagesAsync?.setListener(this)?.execute(flights)
 
@@ -50,7 +52,7 @@ class MainModel(val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkLis
         return flights[i]
     }
 
-    override fun cancellAsyncTasks() {
+    override fun cancelAsyncTasks() {
         imagesAsync?.onDestroy()
         apiAsync?.onDestroy()
 

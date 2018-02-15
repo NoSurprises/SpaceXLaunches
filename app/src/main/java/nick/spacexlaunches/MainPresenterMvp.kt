@@ -9,4 +9,5 @@ interface MainPresenterMvp {
     fun onRefresh()
     fun receiveSpacexFlights(flighs: List<Flight>)
     fun imageLoaded(i: Int)
+    fun flightClicked(flight: Flight)
 }
