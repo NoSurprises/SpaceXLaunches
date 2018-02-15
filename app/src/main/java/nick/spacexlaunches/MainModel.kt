@@ -4,6 +4,7 @@ package nick.spacexlaunches
 import android.util.Log
 import data.Flight
 import org.json.JSONArray
+import org.json.JSONObject
 import utils.FetchNetwork
 import utils.FetchNetworkListener
 import utils.LoadImage
@@ -30,22 +31,24 @@ class MainModel(private val presenter: MainPresenterMvp) : MainModelMvp, FetchNe
         Log.i(TAG, "length: ${flights.size}")
         for (i in 0 until jsonData.length()) {
             val flightRaw = jsonData.getJSONObject(i)
-
-            val rocketName = flightRaw.getJSONObject("rocket").getString("rocket_name")
-            val launch = flightRaw.getLong("launch_date_unix")
-            val iconUrl = flightRaw.getJSONObject("links").getString("mission_patch")
-            val details = flightRaw.getString("details")
-            val article = flightRaw.getJSONObject("links").getString("article_link")
-
-            val datelaunch = dateFormat.format(Date(launch * 1000))
-
-            flights.add(Flight(rocketName, datelaunch, iconUrl = URL(iconUrl), details = details, article = article))
+            addNewFlight(flightRaw)
         }
 
         imagesAsync = LoadImage()
         imagesAsync?.setListener(this)?.execute(flights)
 
         presenter.receiveSpacexFlights(flights)
+    }
+
+    private fun addNewFlight(flightRaw: JSONObject) {
+        val rocketName = flightRaw.getJSONObject("rocket").getString("rocket_name")
+        val launch = flightRaw.getLong("launch_date_unix")
+        val iconUrl = flightRaw.getJSONObject("links").getString("mission_patch")
+        val details = flightRaw.getString("details")
+        val article = flightRaw.getJSONObject("links").getString("article_link")
+        val datelaunch = dateFormat.format(Date(launch * 1000))
+
+        flights.add(Flight(rocketName, datelaunch, iconUrl = URL(iconUrl), details = details, article = article))
     }
 
     override fun onImageLoaded(i: Int) {

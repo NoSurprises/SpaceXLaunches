@@ -30,7 +30,7 @@ class LoadImage : AsyncTask<List<Flight>, Int, Boolean>() {
             with(x.iconUrl.openConnection() as HttpURLConnection) {
                 inputStream.use {
                     val bigIcon = BitmapFactory.decodeStream(it)
-                    x.icon = Bitmap.createScaledBitmap(bigIcon, 150, 150, false)
+                    x.icon = Bitmap.createScaledBitmap(bigIcon, 200, 200, false)
                     publishProgress(i)
                 }
             }
