@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
 
         presenter.attachView(this)
         swipeRefresh.setOnRefreshListener { presenter.onRefresh() }
-
     }
 
     override fun onStart() {

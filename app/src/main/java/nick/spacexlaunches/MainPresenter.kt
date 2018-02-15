@@ -1,7 +1,13 @@
 package nick.spacexlaunches
 
+import android.util.Log
+import data.Flight
+
+val TAG = "daywint"
+
 class MainPresenter : MainPresenterMvp {
-    var view: MainViewMvp? = null
+    private var view: MainViewMvp? = null
+    private var model: MainModelMvp = MainModel(this)
 
     override fun attachView(view: MainViewMvp) {
         this.view = view
@@ -12,10 +18,17 @@ class MainPresenter : MainPresenterMvp {
     }
 
     override fun onStart() {
-
+        onRefresh()
     }
 
     override fun onRefresh() {
+        view?.showLoadingIndicator()
+        model.fetchSpaceXFlights()
+    }
+
+
+    override fun receiveSpacexFlights(flighs: List<Flight>) {
         view?.hideLoadingIndicator()
+        Log.d(TAG, flighs.toString())
     }
 }
