@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
     }
 
     override fun addFlight(flight: Flight) {
-        Log.d(TAG, "add flight: ");
+        Log.v(TAG, "add flight: ");
         val newFlight = layoutInflater.inflate(R.layout.flight, flights, false)
 
         newFlight.findViewById<TextView>(R.id.rocket_name).text = flight.rocketName

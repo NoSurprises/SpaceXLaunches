@@ -10,12 +10,16 @@ import java.net.URL
 
 class MainModel(val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkListener {
 
-    override fun fetchSpaceXFlights() {
-        val url = URL("https://api.spacexdata.com/v2/launches?launch_year=2017")
-        FetchNetwork().setFetchNetworkListener(this).execute(url)
-    }
-
     private var flights = ArrayList<Flight>()
+    private var imagesAsync: LoadImage? = null
+    private var apiAsync: FetchNetwork? = null
+
+    override fun fetchSpaceXFlights() {
+        cancellAsyncTasks()
+        val url = URL("https://api.spacexdata.com/v2/launches?launch_year=2017")
+        apiAsync = FetchNetwork()
+        apiAsync?.setFetchNetworkListener(this)?.execute(url)
+    }
 
     override fun onFinishResponseFromApi(result: String) {
         val jsonData = JSONArray(result)
@@ -31,17 +35,26 @@ class MainModel(val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkLis
 
             flights.add(Flight(rocketName, launch.toString(), iconUrl = URL(iconUrl), details = details))
         }
-        LoadImage().setListener(this).execute(flights)
-        presenter.receiveSpacexFlights(flights)
+        imagesAsync = LoadImage()
+        imagesAsync?.setListener(this)?.execute(flights)
 
+        presenter.receiveSpacexFlights(flights)
     }
 
     override fun onImageLoaded(i: Int) {
-        Log.d(TAG, "imageLoaded: $i")
+        Log.v(TAG, "imageLoaded: $i")
         presenter.imageLoaded(i)
     }
 
     override fun getFlight(i: Int): Flight {
         return flights[i]
+    }
+
+    override fun cancellAsyncTasks() {
+        imagesAsync?.onDestroy()
+        apiAsync?.onDestroy()
+
+        imagesAsync = null
+        apiAsync = null
     }
 }

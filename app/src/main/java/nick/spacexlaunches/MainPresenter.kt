@@ -15,6 +15,7 @@ class MainPresenter : MainPresenterMvp {
 
     override fun detachView() {
         view = null
+        model.cancellAsyncTasks()
     }
 
     override fun onStart() {
@@ -31,11 +32,14 @@ class MainPresenter : MainPresenterMvp {
     override fun receiveSpacexFlights(flighs: List<Flight>) {
         view?.hideLoadingIndicator()
         Log.i(TAG, "size in presenter: ${flighs.size}")
-        flighs.forEach({ x -> view?.addFlight(x); Log.d(TAG, "flight: $x"); })
+        flighs.forEach({ x ->
+            view?.addFlight(x);
+            Log.v(TAG, "flight: $x");
+        })
     }
 
     override fun imageLoaded(i: Int) {
-        Log.d(TAG, "setting image: $i");
+        Log.v(TAG, "setting image: $i");
         view?.setChildImage(i, model.getFlight(i)?.icon!!)
     }
 }
