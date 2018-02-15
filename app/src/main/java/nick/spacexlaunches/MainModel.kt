@@ -1,5 +1,6 @@
 package nick.spacexlaunches
 
+
 import android.util.Log
 import data.Flight
 import org.json.JSONArray
@@ -7,13 +8,15 @@ import utils.FetchNetwork
 import utils.FetchNetworkListener
 import utils.LoadImage
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainModel(private val presenter: MainPresenterMvp) : MainModelMvp, FetchNetworkListener {
 
     private var flights = ArrayList<Flight>()
     private var imagesAsync: LoadImage? = null
     private var apiAsync: FetchNetwork? = null
-
+    private val dateFormat = SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US)
     override fun fetchSpaceXFlights() {
         cancelAsyncTasks()
         val url = URL("https://api.spacexdata.com/v2/launches?launch_year=2017")
@@ -34,7 +37,9 @@ class MainModel(private val presenter: MainPresenterMvp) : MainModelMvp, FetchNe
             val details = flightRaw.getString("details")
             val article = flightRaw.getJSONObject("links").getString("article_link")
 
-            flights.add(Flight(rocketName, launch.toString(), iconUrl = URL(iconUrl), details = details, article = article))
+            val datelaunch = dateFormat.format(Date(launch * 1000))
+
+            flights.add(Flight(rocketName, datelaunch, iconUrl = URL(iconUrl), details = details, article = article))
         }
 
         imagesAsync = LoadImage()
