@@ -1,12 +1,15 @@
 package nick.spacexlaunches
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import data.Flight
+
 
 class MainActivity : AppCompatActivity(), MainViewMvp {
 
@@ -31,6 +34,10 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
         presenter.detachView()
     }
 
+    override fun removeFlights() {
+        flights.removeAllViews()
+    }
+
     override fun addFlight(flight: Flight) {
         Log.d(TAG, "add flight: ");
         val newFlight = layoutInflater.inflate(R.layout.flight, flights, false)
@@ -38,8 +45,11 @@ class MainActivity : AppCompatActivity(), MainViewMvp {
         newFlight.findViewById<TextView>(R.id.rocket_name).text = flight.rocketName
         newFlight.findViewById<TextView>(R.id.details).text = flight.details
         newFlight.findViewById<TextView>(R.id.launch).text = flight.launch
-
         flights.addView(newFlight)
+    }
+
+    override fun setChildImage(i: Int, image: Bitmap) {
+        flights.getChildAt(i).findViewById<ImageView>(R.id.icon).setImageBitmap(image)
     }
 
     override fun showLoadingIndicator() {

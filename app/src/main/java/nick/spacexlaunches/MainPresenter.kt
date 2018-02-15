@@ -1,5 +1,6 @@
 package nick.spacexlaunches
 
+import android.util.Log
 import data.Flight
 
 val TAG = "daywint"
@@ -21,6 +22,7 @@ class MainPresenter : MainPresenterMvp {
     }
 
     override fun onRefresh() {
+        view?.removeFlights()
         view?.showLoadingIndicator()
         model.fetchSpaceXFlights()
     }
@@ -28,6 +30,12 @@ class MainPresenter : MainPresenterMvp {
 
     override fun receiveSpacexFlights(flighs: List<Flight>) {
         view?.hideLoadingIndicator()
-        flighs.forEach({ x -> view?.addFlight(x) })
+        Log.i(TAG, "size in presenter: ${flighs.size}")
+        flighs.forEach({ x -> view?.addFlight(x); Log.d(TAG, "flight: $x"); })
+    }
+
+    override fun imageLoaded(i: Int) {
+        Log.d(TAG, "setting image: $i");
+        view?.setChildImage(i, model.getFlight(i)?.icon!!)
     }
 }

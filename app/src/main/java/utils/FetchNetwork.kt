@@ -3,7 +3,6 @@ package utils
 import android.os.AsyncTask
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -12,11 +11,9 @@ class FetchNetwork : AsyncTask<URL, Void, String>() {
     private var listener: FetchNetworkListener? = null
 
     override fun doInBackground(vararg params: URL?): String {
-        if (params.size != 1)
-            cancel(true)
-        val url = params[0]
 
-        val response = StringBuilder()
+        val url = params[0]
+        val response = StringBuffer()
 
         with(url?.openConnection() as HttpURLConnection) {
             BufferedReader(InputStreamReader(inputStream)).use {
@@ -27,12 +24,16 @@ class FetchNetwork : AsyncTask<URL, Void, String>() {
                 }
             }
         }
+
         return response.toString()
+
     }
 
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
-        listener?.onFinish(result ?: "")
+        listener?.onFinishResponseFromApi(result ?: "")
+        listener = null
+
     }
 
     fun setFetchNetworkListener(listener: FetchNetworkListener): FetchNetwork {

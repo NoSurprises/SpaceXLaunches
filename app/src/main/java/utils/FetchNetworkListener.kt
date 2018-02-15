@@ -1,6 +1,6 @@
 package utils
 
 interface FetchNetworkListener {
-    fun onFinish(result: String)
-
+    fun onFinishResponseFromApi(result: String)
+    fun onImageLoaded(i: Int)
 }

@@ -8,4 +8,5 @@ interface MainPresenterMvp {
     fun onStart()
     fun onRefresh()
     fun receiveSpacexFlights(flighs: List<Flight>)
+    fun imageLoaded(i: Int)
 }
